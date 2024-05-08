@@ -1,33 +1,11 @@
 require('dotenv').config();
 const express = require('express');
-const receiverService = require('./service/receiverService');
-const sendMail = require('./service/senderService');
-const generateUniqueNames = require('./service/utilService');
 const mongoose = require('mongoose');
+const smtpServer = require('./SMTP/server');
+const sendMail = require('./SMTP/mailTester');
+const testRoutes = require('./routes/testRoutes');
 
 const app = express();
-
-
-
-// const connectDB = async () => {
-//     return await mongoose.connect(process.env.DB_URL);
-
-// }
-
-// try {
-//     await connectDB();
-//     console.log("Connect with DB")
-//     app.listen(process.env.APP_PORT, () => {
-//         console.log('started on: ', process.env.PORT);
-//         receiverService.listen(process.env.SMTP_RECEIVER, 'localhost', () => {
-//             console.log("mail receiver server running on: ", process.env.SMTP_RECEIVER);
-//         })
-
-//     })
-
-// } catch (err) {
-//     console.log("Failed to connect with DB with error: ", err);
-// }
 
 
 const connectDB = async () => {
@@ -37,9 +15,10 @@ const connectDB = async () => {
             console.log("Connected to the database");
             app.listen(process.env.APP_PORT, () => {
                 console.log('Server started on port: ', process.env.APP_PORT);
-                // receiverService.listen(process.env.SMTP_RECEIVER, 'localhost', () => {
-                //     console.log("Mail receiver server running on: ", process.env.SMTP_RECEIVER);
-                // });
+                smtpServer(process.env.SMTP_PORT, 'localhost')
+                setTimeout(() => {
+                    sendMail();
+                }, 3000)
             });
         }
     } catch (err) {
@@ -49,3 +28,5 @@ const connectDB = async () => {
 };
 
 connectDB();
+
+app.use('/api', testRoutes);
