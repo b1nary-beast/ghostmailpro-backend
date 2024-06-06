@@ -10,7 +10,7 @@ const mailOptions = {
         // File Stream attachment
         {
             filename: 'ahem-happy.png',
-            path: './dist/browser/assets/images/happy.png',
+            path: './dummy.jpg',
             cid: 'ahem-tester@mydomain.com' // should be as unique as possible
         }
     ]
