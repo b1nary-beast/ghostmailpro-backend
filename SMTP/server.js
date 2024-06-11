@@ -1,4 +1,5 @@
-const { SMTPServer } = require("smtp-server")
+const { SMTPServer } = require("smtp-server");
+const { saveEmail } = require("../controllers/emailController");
 const simpleParser = require('mailparser').simpleParser;
 const startSMTPServer = (port, host) => {
     const mailServer = new SMTPServer({
@@ -42,6 +43,12 @@ const startSMTPServer = (port, host) => {
                         }
                     })
                     console.log("processed response is ", mail);
+                    // save the processed email in the db;
+                    saveEmail(mail).then(() => {
+                        mail.to.value.forEach(receiver => {
+                            updateMailBox(mail, receiver);
+                        })
+                    });
                 })
 
             })
