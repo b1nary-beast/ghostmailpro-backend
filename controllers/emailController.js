@@ -1,4 +1,5 @@
 const Email = require("../models/email");
+const EmailCount = require("../models/emailCount");
 const MailBox = require("../models/mailBox");
 
 const saveEmail = async (email) => {
@@ -42,6 +43,22 @@ const updateMailBox = async (mail, address) => {
     }
     catch (err) {
         console.log('failed to save email in the mailbox');
+    }
+}
+
+const updateEmailCount = async () => {
+    try {
+        const result = await EmailCount.findOneAndUpdate(
+            {}, // empty fileter as only one entry will exists
+            {
+                $inc: { count: 1 },
+                $setOnInsert: { since: new Date().getTime() }
+            },
+        )
+
+        // at the end emit the event so that it can be reflected on the frontend
+    } catch (err) {
+        console.log("failed to update the email count")
     }
 }
 
