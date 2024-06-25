@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const smtpServer = require('./SMTP/server');
 const sendMail = require('./SMTP/mailTester');
-const pingRoute = require('./routes/pingRoute');
+const apiRoute = require('./routes/apiRoute');
 
 const app = express();
 
@@ -29,4 +29,4 @@ const connectDB = async () => {
 
 connectDB();
 
-app.use('/api', pingRoute);
+app.use('/api/', apiRoute);
